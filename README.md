@@ -9,11 +9,11 @@ cd iso8583
 ```
 Prepare package
 ```bash
-github.com/go-sql-driver/mysql
-github.com/gorilla/mux
-github.com/mofax/iso8583
-github.com/rivo/uniseg
-github.com/stretchr/testify
+go get github.com/go-sql-driver/mysql
+go get github.com/gorilla/mux
+go get github.com/mofax/iso8583
+go get github.com/rivo/uniseg
+go get github.com/stretchr/testify
 ```
 
 Running program
