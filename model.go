@@ -55,14 +55,20 @@ type PaymentResponse struct {
 type Iso8583 struct {
 	Iso8583        string   `json:"iso_8583"`
 	MTI            string   `json:"mti"`
-	Hex            string   `json:"hex"`
+	Bitmap         []int64  `json:"bitmap"`
 	ResponseStatus Response `json:"responseStatus"`
+}
+
+type Json struct {
+	Header      int         `json:"header"`
+	MTI         string      `json:"mti"`
+	Bitmap      []int64     `json:"bitmap"`
+	Transaction Transaction `json:"transaction"`
 }
 
 type ExtractElem struct {
 	Element        int64    `json:"element"`
 	Data           string   `json:"data"`
-	Header         string   `json:"header"`
 	ResponseStatus Response `json:"responseStatus"`
 }
 

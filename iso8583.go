@@ -65,12 +65,12 @@ func toIso8583(writer http.ResponseWriter, request *http.Request) {
 
 	msg, _ := isomsg.ToString()
 	mti := isomsg.Mti.String()
-	//bitmap := one.Bitmap
+	bitmap := isomsg.Bitmap
 	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
 
 	response.Iso8583 = header + msg
 	response.MTI = mti
-	//response.Bitmap = bitmap
+	response.Bitmap = bitmap
 	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = statusCode, "Success"
 
 	jsonFormatter(writer, response, statusCode)
@@ -92,6 +92,7 @@ func extractElem(writer http.ResponseWriter, request *http.Request) {
 
 	transaction, statusCode, err := selectPayment(payment, processingCode, MysqlDB)
 
+	//isoSpec, _ := iso8583.SpecFromFile("spec1987.yml")
 	isomsg := convertIso(transaction)
 
 	elementMap := isomsg.Elements.GetElements()
@@ -124,45 +125,65 @@ func jsonToIso(writer http.ResponseWriter, request *http.Request) {
 
 	msg, _ := iso.ToString()
 	mti := iso.Mti.String()
-	hex, _ := iso8583.BitMapArrayToHex(iso.Bitmap)
+	bmap := iso.Bitmap
 
 	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
 
 	response.Iso8583 = header + msg
 	response.MTI = mti
-	response.Hex = hex
-	//response.Bitmap = bitmap
+	response.Bitmap = bmap
 	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
 
 	jsonFormatter(writer, response, 200)
 }
 
 func isoToJson(writer http.ResponseWriter, request *http.Request) {
-	var response Iso8583
+	var response Json
 	reqBody, _ := ioutil.ReadAll(request.Body)
 
 	req := string(reqBody)
 
-	//header, _ := strconv.Atoi(req[:4])
-	//isomsg := req[4:]
+	header := req[:4]
+	mti := req[4:8]
+	hex := req[8:24]
+	de := req[24:]
 
-	isostruct := iso8583.NewISOStruct("spec1987.yml", false)
-	parsed, err := isostruct.Parse(req)
-	if err != nil {
-		fmt.Println("1: ", err)
+	bmap, _ := iso8583.HexToBitmapArray(hex)
+	spec, _ := iso8583.SpecFromFile("spec1987.yml")
+
+	element, _ := iso8583.UnpackElements(bmap, de, spec)
+	q := iso8583.IsoStruct{
+		Spec:     spec,
+		Bitmap:   bmap,
+		Elements: element,
 	}
+	emap := q.Elements.GetElements()
 
-	msg, _ := parsed.ToString()
-	mti := parsed.Mti.String()
-	hex, _ := iso8583.BitMapArrayToHex(parsed.Bitmap)
-
-	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
-
-	response.Iso8583 = header + msg
+	response.Header, _ = strconv.Atoi(header)
 	response.MTI = mti
-	response.Hex = hex
-	//response.Bitmap = bitmap
-	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
+	response.Bitmap = bmap
+
+	response.Transaction.Pan = emap[2]
+	response.Transaction.ProcessingCode = emap[3]
+	response.Transaction.TotalAmount, _ = strconv.Atoi(emap[4])
+	response.Transaction.SettlementAmount = emap[5]
+	response.Transaction.CardholderBillingAmount = emap[6]
+	response.Transaction.TransmissionDateTime = emap[7]
+	response.Transaction.SettlementConversionRate = emap[9]
+	response.Transaction.CardHolderBillingConvRate = emap[10]
+	response.Transaction.Stan = emap[11]
+	response.Transaction.LocalTransactionTime = emap[12]
+	response.Transaction.LocalTransactionDate = emap[13]
+	response.Transaction.CaptureDate = emap[17]
+	response.Transaction.CategoryCode = emap[18]
+	response.Transaction.PointOfServiceEntryMode = emap[22]
+	response.Transaction.Refnum = emap[37]
+	response.Transaction.CardAcceptorData.CardAcceptorTerminalId = emap[41]
+	response.Transaction.AdditionalData = emap[48]
+	response.Transaction.Currency = emap[49]
+	response.Transaction.SettlementCurrencyCode = emap[50]
+	response.Transaction.CardHolderBillingCurrencyCode = emap[51]
+	response.Transaction.AdditionalDataNational = emap[57]
 
 	jsonFormatter(writer, response, 200)
 
