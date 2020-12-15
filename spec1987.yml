@@ -208,7 +208,7 @@
   ContentType: ans
   Label: Card acceptor terminal identification
   LenType: fixed
-  MaxLen: 8
+  MaxLen: 16
 42:
   ContentType: ans
   Label: Card acceptor identification code

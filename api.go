@@ -21,6 +21,7 @@ func server() *mux.Router {
 	router.HandleFunc("/payment/{processingCode}/iso/{element}", extractElem).Methods("GET")
 	router.HandleFunc("/payment/iso", jsonToIso).Methods("POST")
 	router.HandleFunc("/payment/json", isoToJson).Methods("POST")
+	router.HandleFunc("/payment/json/file", isoToJsonFile).Methods("POST")
 
 	return router
 }

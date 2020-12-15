@@ -47,6 +47,27 @@ func getPayment(writer http.ResponseWriter, request *http.Request) {
 }
 
 func createPayment(writer http.ResponseWriter, request *http.Request) {
+	/*
+		var response PaymentResponse
+		var transaction TransactionResponse
+		reqBody, _ := ioutil.ReadAll(request.Body)
+
+		err := pingDb(MysqlDB)
+		if err != nil {
+			response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 500, DatabaseError
+			jsonFormatter(writer, response, 500)
+		} else {
+			var transaction Transaction
+			err := json.Unmarshal(reqBody, &transaction)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+
+		}
+
+	*/
 
 }
 

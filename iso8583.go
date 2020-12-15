@@ -9,159 +9,112 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func convertIso(transaction Transaction) iso8583.IsoStruct {
 
-	cardAcceptor := transaction.CardAcceptorData.CardAcceptorName + transaction.CardAcceptorData.CardAcceptorCity + transaction.CardAcceptorData.CardAcceptorCountryCode
+	cardAcceptorTerminalId := transaction.CardAcceptorData.CardAcceptorTerminalId
+	cardAcceptorName := transaction.CardAcceptorData.CardAcceptorName
+	cardAcceptorCity := transaction.CardAcceptorData.CardAcceptorCity
+	cardAcceptorCountryCode := transaction.CardAcceptorData.CardAcceptorCountryCode
+
+	if len(transaction.CardAcceptorData.CardAcceptorTerminalId) < 16 {
+		cardAcceptorTerminalId = rightPad(transaction.CardAcceptorData.CardAcceptorTerminalId, 16, " ")
+	}
+	if len(transaction.CardAcceptorData.CardAcceptorName) < 25 {
+		cardAcceptorName = rightPad(transaction.CardAcceptorData.CardAcceptorName, 25, " ")
+	}
+	if len(transaction.CardAcceptorData.CardAcceptorCity) < 13 {
+		cardAcceptorCity = rightPad(transaction.CardAcceptorData.CardAcceptorCity, 13, " ")
+	}
+	if len(transaction.CardAcceptorData.CardAcceptorCountryCode) < 2 {
+		cardAcceptorCountryCode = rightPad(transaction.CardAcceptorData.CardAcceptorCountryCode, 2, " ")
+	}
+	cardAcceptor := cardAcceptorName + cardAcceptorCity + cardAcceptorCountryCode
+
+	trans := map[int64]string{2: transaction.Pan,
+		3:  transaction.ProcessingCode,
+		4:  strconv.Itoa(transaction.TotalAmount),
+		5:  transaction.SettlementAmount,
+		6:  transaction.CardholderBillingAmount,
+		7:  transaction.TransmissionDateTime,
+		9:  transaction.SettlementConversionRate,
+		10: transaction.CardHolderBillingConvRate,
+		11: transaction.Stan,
+		12: transaction.LocalTransactionTime,
+		13: transaction.LocalTransactionDate,
+		17: transaction.CaptureDate,
+		18: transaction.CategoryCode,
+		22: transaction.PointOfServiceEntryMode,
+		37: transaction.Refnum,
+		41: cardAcceptorTerminalId,
+		43: cardAcceptor,
+		48: transaction.AdditionalData,
+		49: transaction.Currency,
+		50: transaction.SettlementCurrencyCode,
+		51: transaction.CardHolderBillingCurrencyCode,
+		57: transaction.AdditionalDataNational,
+	}
 
 	one := iso8583.NewISOStruct("spec1987.yml", false)
+	spec, _ := specFromFile("spec1987.yml")
 
 	if one.Mti.String() != "" {
 		fmt.Printf("Empty generates invalid MTI")
 	}
 
 	one.AddMTI("0200")
-	one.AddField(2, transaction.Pan)
-	one.AddField(3, transaction.ProcessingCode)
-	one.AddField(4, strconv.Itoa(transaction.TotalAmount))
-	one.AddField(5, transaction.SettlementAmount)
-	one.AddField(6, transaction.CardholderBillingAmount)
-	one.AddField(7, transaction.TransmissionDateTime)
-	one.AddField(9, transaction.SettlementConversionRate)
-	one.AddField(10, transaction.CardHolderBillingConvRate)
-	one.AddField(11, transaction.Stan)
-	one.AddField(12, transaction.LocalTransactionTime)
-	one.AddField(13, transaction.LocalTransactionDate)
-	one.AddField(17, transaction.CaptureDate)
-	one.AddField(18, transaction.CategoryCode)
-	one.AddField(22, transaction.PointOfServiceEntryMode)
-	one.AddField(37, transaction.Refnum)
-	one.AddField(41, transaction.CardAcceptorData.CardAcceptorTerminalId)
-	one.AddField(43, cardAcceptor)
-	one.AddField(48, transaction.AdditionalData)
-	one.AddField(49, transaction.Currency)
-	one.AddField(50, transaction.SettlementCurrencyCode)
-	one.AddField(51, transaction.CardHolderBillingCurrencyCode)
-	one.AddField(57, transaction.AdditionalDataNational)
+
+	for field, data := range trans {
+
+		fieldSpec := spec.fields[int(field)]
+
+		if fieldSpec.LenType == "fixed" {
+			lengthValidate, _ := iso8583.FixedLengthIntegerValidator(int(field), fieldSpec.MaxLen, data)
+
+			if lengthValidate == false {
+				if fieldSpec.ContentType == "n" {
+					data = leftPad(data, fieldSpec.MaxLen, "0")
+				} else {
+					data = rightPad(data, fieldSpec.MaxLen, " ")
+				}
+			}
+		}
+
+		one.AddField(field, data)
+
+		writeLog("Field[" + strconv.Itoa(int(field)) + "]: " + data + " (" + fieldSpec.Label + ")")
+
+	}
 
 	return one
 }
 
-func toIso8583(writer http.ResponseWriter, request *http.Request) {
-	var response Iso8583
-	var payment PaymentResponse
-	err := pingDb(MysqlDB)
-	processingCode := mux.Vars(request)["processingCode"]
-
-	if err != nil {
-		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 500, DatabaseError
-		jsonFormatter(writer, response, 500)
-	}
-
-	transaction, statusCode, err := selectPayment(payment, processingCode, MysqlDB)
-
-	isomsg := convertIso(transaction)
-
-	msg, _ := isomsg.ToString()
-	mti := isomsg.Mti.String()
-	bitmap := isomsg.Bitmap
-	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
-
-	response.Iso8583 = header + msg
-	response.MTI = mti
-	response.Bitmap = bitmap
-	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = statusCode, "Success"
-
-	jsonFormatter(writer, response, statusCode)
-}
-
-func extractElem(writer http.ResponseWriter, request *http.Request) {
-	var response ExtractElem
-	var payment PaymentResponse
-	err := pingDb(MysqlDB)
-	processingCode := mux.Vars(request)["processingCode"]
-	element := mux.Vars(request)["element"]
-	elementInt, _ := strconv.Atoi(element)
-	elementInt64 := int64(elementInt)
-
-	if err != nil {
-		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 500, DatabaseError
-		jsonFormatter(writer, response, 500)
-	}
-
-	transaction, statusCode, err := selectPayment(payment, processingCode, MysqlDB)
-
-	//isoSpec, _ := iso8583.SpecFromFile("spec1987.yml")
-	isomsg := convertIso(transaction)
-
-	elementMap := isomsg.Elements.GetElements()
-	data, exist := elementMap[elementInt64]
-
-	var statusDesc string
-	if exist {
-		response.Data = data
-		statusDesc = "Success"
-	} else {
-		response.Data = "Data not found"
-		statusCode = 404
-		statusDesc = "Data not found"
-	}
-
-	response.Element = elementInt64
-	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = statusCode, statusDesc
-
-	jsonFormatter(writer, response, statusCode)
-}
-
-func jsonToIso(writer http.ResponseWriter, request *http.Request) {
-	reqBody, _ := ioutil.ReadAll(request.Body)
-	var transaction Transaction
-	var response Iso8583
-
-	json.Unmarshal(reqBody, &transaction)
-
-	iso := convertIso(transaction)
-
-	msg, _ := iso.ToString()
-	mti := iso.Mti.String()
-	bmap := iso.Bitmap
-
-	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
-
-	response.Iso8583 = header + msg
-	response.MTI = mti
-	response.Bitmap = bmap
-	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
-
-	jsonFormatter(writer, response, 200)
-}
-
-func isoToJson(writer http.ResponseWriter, request *http.Request) {
+func convertJson(message string) Json {
 	var response Json
-	reqBody, _ := ioutil.ReadAll(request.Body)
 
-	req := string(reqBody)
+	header := message[0:4]
+	data := message[4:]
 
-	header := req[:4]
-	mti := req[4:8]
-	hex := req[8:24]
-	de := req[24:]
+	isoStruct := iso8583.NewISOStruct("spec1987.yml", true)
 
-	bmap, _ := iso8583.HexToBitmapArray(hex)
-	spec, _ := iso8583.SpecFromFile("spec1987.yml")
-
-	element, _ := iso8583.UnpackElements(bmap, de, spec)
-	q := iso8583.IsoStruct{
-		Spec:     spec,
-		Bitmap:   bmap,
-		Elements: element,
+	msg, err := isoStruct.Parse(data)
+	if err != nil {
+		fmt.Println(err)
 	}
-	emap := q.Elements.GetElements()
 
 	response.Header, _ = strconv.Atoi(header)
-	response.MTI = mti
-	response.Bitmap = bmap
+	response.MTI = msg.Mti.String()
+	response.Hex, _ = iso8583.BitMapArrayToHex(msg.Bitmap)
+
+	emap := msg.Elements.GetElements()
+
+	cardAcceptorTerminalId := strings.TrimRight(msg.Elements.GetElements()[41], " ")
+	cardAcceptorName := strings.TrimRight(msg.Elements.GetElements()[43][:25], " ")
+	cardAcceptorCity := strings.TrimRight(msg.Elements.GetElements()[43][25:38], " ")
+	cardAcceptorCountryCode := strings.TrimRight(msg.Elements.GetElements()[43][38:], " ")
 
 	response.Transaction.Pan = emap[2]
 	response.Transaction.ProcessingCode = emap[3]
@@ -178,14 +131,186 @@ func isoToJson(writer http.ResponseWriter, request *http.Request) {
 	response.Transaction.CategoryCode = emap[18]
 	response.Transaction.PointOfServiceEntryMode = emap[22]
 	response.Transaction.Refnum = emap[37]
-	response.Transaction.CardAcceptorData.CardAcceptorTerminalId = emap[41]
+	response.Transaction.CardAcceptorData.CardAcceptorTerminalId = cardAcceptorTerminalId
+	response.Transaction.CardAcceptorData.CardAcceptorName = cardAcceptorName
+	response.Transaction.CardAcceptorData.CardAcceptorCity = cardAcceptorCity
+	response.Transaction.CardAcceptorData.CardAcceptorCountryCode = cardAcceptorCountryCode
 	response.Transaction.AdditionalData = emap[48]
 	response.Transaction.Currency = emap[49]
 	response.Transaction.SettlementCurrencyCode = emap[50]
 	response.Transaction.CardHolderBillingCurrencyCode = emap[51]
 	response.Transaction.AdditionalDataNational = emap[57]
 
+	return response
+}
+
+func toIso8583(writer http.ResponseWriter, request *http.Request) {
+	var response Iso8583
+	var payment PaymentResponse
+	err := pingDb(MysqlDB)
+	processingCode := mux.Vars(request)["processingCode"]
+
+	writeLog("New Request: JSON to ISO8583")
+
+	if err != nil {
+		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 500, DatabaseError
+		jsonFormatter(writer, response, 500)
+	}
+
+	transaction, statusCode, err := selectPayment(payment, processingCode, MysqlDB)
+	writeLog("Get transaction from database, processing code: " + transaction.ProcessingCode)
+
+	isomsg := convertIso(transaction)
+
+	msg, _ := isomsg.ToString()
+	mti := isomsg.Mti.String()
+	hex, _ := iso8583.BitMapArrayToHex(isomsg.Bitmap)
+	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
+
+	currentTime := time.Now()
+	date := currentTime.Format("2006-01-02_15.04.05")
+	filename := CreateFile(transaction.ProcessingCode+"_"+date, header+msg)
+
+	response.Iso8583 = header + msg
+	response.MTI = mti
+	response.Hex = hex
+	response.FileName = filename
+	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = statusCode, "Success"
+
+	writeLog("Header: " + header)
+	writeLog("MTI: " + mti)
+	writeLog("HEX: " + hex)
+	writeLog("ISO Message: " + msg)
+	writeLog("ISO Full Message: " + header + msg)
+	writeLog("File: " + filename)
+	writeLog("JSON to ISO8583 success (200)")
+
+	jsonFormatter(writer, response, statusCode)
+}
+
+func extractElem(writer http.ResponseWriter, request *http.Request) {
+	var response ExtractElem
+	var payment PaymentResponse
+	err := pingDb(MysqlDB)
+	processingCode := mux.Vars(request)["processingCode"]
+	element := mux.Vars(request)["element"]
+	elementInt, _ := strconv.Atoi(element)
+	elementInt64 := int64(elementInt)
+	writeLog("New Request: Extract Element ISO8583")
+
+	if err != nil {
+		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 500, DatabaseError
+		jsonFormatter(writer, response, 500)
+	}
+
+	transaction, statusCode, err := selectPayment(payment, processingCode, MysqlDB)
+
+	//isoSpec, _ := iso8583.SpecFromFile("spec1987.yml")
+	isomsg := convertIso(transaction)
+	writeLog("Get transaction from database, processing code: " + transaction.ProcessingCode)
+
+	elementMap := isomsg.Elements.GetElements()
+	data, exist := elementMap[elementInt64]
+
+	var statusDesc string
+	if exist {
+		response.Data = data
+		statusDesc = "Success"
+
+		writeLog("Field[" + strconv.Itoa(elementInt) + "]: " + data)
+		writeLog("Extract Element ISO8583 success (200)")
+	} else {
+		response.Data = "Data not found"
+		statusCode = 404
+		statusDesc = "Data not found"
+
+		writeLog("Field[" + strconv.Itoa(elementInt) + "]: Data not found")
+		writeLog("Extract Element ISO8583 failed (404)")
+	}
+
+	response.Element = elementInt64
+	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = statusCode, statusDesc
+
+	jsonFormatter(writer, response, statusCode)
+}
+
+func jsonToIso(writer http.ResponseWriter, request *http.Request) {
+	reqBody, _ := ioutil.ReadAll(request.Body)
+	var transaction Transaction
+	var response Iso8583
+
+	writeLog("New Request: JSON to ISO8583")
+
+	json.Unmarshal(reqBody, &transaction)
+
+	iso := convertIso(transaction)
+
+	msg, _ := iso.ToString()
+	mti := iso.Mti.String()
+	hex, _ := iso8583.BitMapArrayToHex(iso.Bitmap)
+
+	header := fmt.Sprintf("%04d", uniseg.GraphemeClusterCount(msg))
+
+	currentTime := time.Now()
+	date := currentTime.Format("2006-01-02_15.04.05")
+	filename := CreateFile(transaction.ProcessingCode+"_"+date, header+msg)
+
+	response.Iso8583 = header + msg
+	response.MTI = mti
+	response.Hex = hex
+	response.FileName = filename
+	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
+
+	writeLog("Header: " + header)
+	writeLog("MTI: " + mti)
+	writeLog("HEX: " + hex)
+	writeLog("ISO Message: " + msg)
+	writeLog("ISO Full Message: " + header + msg)
+	writeLog("File: " + filename)
+	writeLog("JSON to ISO8583 success (200)")
+
+	jsonFormatter(writer, response, 200)
+}
+
+func isoToJson(writer http.ResponseWriter, request *http.Request) {
+	var response Json
+	reqBody, _ := ioutil.ReadAll(request.Body)
+
+	writeLog("New Request: ISO8583 to JSON from file")
+
+	req := string(reqBody)
+	writeLog("ISO Message: " + req)
+
+	response = convertJson(req)
+
+	writeLog("ISO8583 to JSON success (200)")
+	response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
+	jsonFormatter(writer, response, 200)
+}
+
+func isoToJsonFile(writer http.ResponseWriter, request *http.Request) {
+	var response Json
+	reqBody, _ := ioutil.ReadAll(request.Body)
+
+	writeLog("New Request: ISO8583 to JSON")
+
+	fileName := string(reqBody)
+	fileName = "isoFiles/" + fileName
+
+	if FuncCheckExist(fileName) {
+		content := ReadFile(fileName)
+		writeLog("ISO Message: " + content)
+		response = convertJson(content)
+
+		writeLog("ISO8583 to JSON success (200)")
+		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 200, "Success"
+
+	} else {
+		writeLog("File not found")
+		writeLog("ISO8583 to JSON failed (404)")
+		response.ResponseStatus.ReasonCode, response.ResponseStatus.ResponseDescription = 404, "File Not Found"
+	}
+
 	jsonFormatter(writer, response, 200)
 
-	//header mti msg
 }

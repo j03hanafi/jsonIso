@@ -1,0 +1,243 @@
+2020-12-15 16:29:31 New Request: JSON to ISO8583
+2020-12-15 16:29:32 Get transaction from database, processing code: 263010
+2020-12-15 16:29:32 Field[10]: 00000111(Conversion rate, cardholder billing)
+2020-12-15 16:29:32 Field[11]: 554461(System trace audit number)
+2020-12-15 16:29:32 Field[13]: 0921(Date, local transaction (MMDD))
+2020-12-15 16:29:32 Field[37]: 678615554461(Retrieval reference number)
+2020-12-15 16:29:32 Field[3]: 263010(Processing code)
+2020-12-15 16:29:32 Field[4]: 000011550000(Amount, transaction)
+2020-12-15 16:29:32 Field[5]: 000001350000(Amount, settlement)
+2020-12-15 16:29:32 Field[6]: 000001350000(Amount, cardholder billing)
+2020-12-15 16:29:32 Field[49]: 360(Currency code, transaction)
+2020-12-15 16:29:32 Field[50]: 702(Currency code, settlement)
+2020-12-15 16:29:32 Field[9]: 00000111(Conversion rate, settlement)
+2020-12-15 16:29:32 Field[18]: 7011(Merchant type)
+2020-12-15 16:29:32 Field[41]: C01             (Card acceptor terminal identification)
+2020-12-15 16:29:32 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI(Additional data - private)
+2020-12-15 16:29:32 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID(Card acceptor name/location)
+2020-12-15 16:29:32 Field[7]: 0921072381(Transmission date & time)
+2020-12-15 16:29:32 Field[12]: 082022(Time, local transaction (hhmmss))
+2020-12-15 16:29:32 Field[17]: 0921(Date, capture)
+2020-12-15 16:29:32 Field[22]: 011(Point of service entry mode)
+2020-12-15 16:29:32 Field[2]: 9360014900000008883(Primary account number (PAN))
+2020-12-15 16:29:32 Field[51]: 702(Currency code, cardholder billing)
+2020-12-15 16:29:32 Field[57]: 61051511562070703C01(Reserved national)
+2020-12-15 16:29:32 Header: 0289
+2020-12-15 16:29:32 MTI: 0200
+2020-12-15 16:29:32 HEX: 7ef8c40008a1e080
+2020-12-15 16:29:32 ISO Message: 02007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:29:32 ISO Full Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:29:32 File: 263010_2020-12-15_16.29.32.txt
+2020-12-15 16:29:32 JSON to ISO8583 success (200)
+2020-12-15 16:30:02 New Request: Extract Element ISO8583
+2020-12-15 16:30:02 Field[49]: 360(Currency code, transaction)
+2020-12-15 16:30:02 Field[51]: 702(Currency code, cardholder billing)
+2020-12-15 16:30:02 Field[57]: 61051511562070703C01(Reserved national)
+2020-12-15 16:30:02 Field[4]: 000011550000(Amount, transaction)
+2020-12-15 16:30:02 Field[9]: 00000111(Conversion rate, settlement)
+2020-12-15 16:30:02 Field[13]: 0921(Date, local transaction (MMDD))
+2020-12-15 16:30:02 Field[22]: 011(Point of service entry mode)
+2020-12-15 16:30:02 Field[18]: 7011(Merchant type)
+2020-12-15 16:30:02 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID(Card acceptor name/location)
+2020-12-15 16:30:02 Field[2]: 9360014900000008883(Primary account number (PAN))
+2020-12-15 16:30:02 Field[3]: 263010(Processing code)
+2020-12-15 16:30:02 Field[7]: 0921072381(Transmission date & time)
+2020-12-15 16:30:02 Field[11]: 554461(System trace audit number)
+2020-12-15 16:30:02 Field[41]: C01             (Card acceptor terminal identification)
+2020-12-15 16:30:02 Field[5]: 000001350000(Amount, settlement)
+2020-12-15 16:30:02 Field[6]: 000001350000(Amount, cardholder billing)
+2020-12-15 16:30:02 Field[10]: 00000111(Conversion rate, cardholder billing)
+2020-12-15 16:30:02 Field[12]: 082022(Time, local transaction (hhmmss))
+2020-12-15 16:30:02 Field[17]: 0921(Date, capture)
+2020-12-15 16:30:02 Field[37]: 678615554461(Retrieval reference number)
+2020-12-15 16:30:02 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI(Additional data - private)
+2020-12-15 16:30:02 Field[50]: 702(Currency code, settlement)
+2020-12-15 16:30:02 Get transaction from database, processing code: 263010
+2020-12-15 16:30:02 Field[2]: 9360014900000008883
+2020-12-15 16:30:02 Extract Element ISO8583 success (200)
+2020-12-15 16:30:17 New Request: Extract Element ISO8583
+2020-12-15 16:30:18 Field[12]: 082022(Time, local transaction (hhmmss))
+2020-12-15 16:30:18 Field[50]: 702(Currency code, settlement)
+2020-12-15 16:30:18 Field[6]: 000001350000(Amount, cardholder billing)
+2020-12-15 16:30:18 Field[7]: 0921072381(Transmission date & time)
+2020-12-15 16:30:18 Field[9]: 00000111(Conversion rate, settlement)
+2020-12-15 16:30:18 Field[37]: 678615554461(Retrieval reference number)
+2020-12-15 16:30:18 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID(Card acceptor name/location)
+2020-12-15 16:30:18 Field[49]: 360(Currency code, transaction)
+2020-12-15 16:30:18 Field[5]: 000001350000(Amount, settlement)
+2020-12-15 16:30:18 Field[13]: 0921(Date, local transaction (MMDD))
+2020-12-15 16:30:18 Field[22]: 011(Point of service entry mode)
+2020-12-15 16:30:18 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI(Additional data - private)
+2020-12-15 16:30:18 Field[57]: 61051511562070703C01(Reserved national)
+2020-12-15 16:30:18 Field[4]: 000011550000(Amount, transaction)
+2020-12-15 16:30:18 Field[11]: 554461(System trace audit number)
+2020-12-15 16:30:18 Field[18]: 7011(Merchant type)
+2020-12-15 16:30:18 Field[17]: 0921(Date, capture)
+2020-12-15 16:30:18 Field[41]: C01             (Card acceptor terminal identification)
+2020-12-15 16:30:18 Field[51]: 702(Currency code, cardholder billing)
+2020-12-15 16:30:18 Field[2]: 9360014900000008883(Primary account number (PAN))
+2020-12-15 16:30:18 Field[3]: 263010(Processing code)
+2020-12-15 16:30:18 Field[10]: 00000111(Conversion rate, cardholder billing)
+2020-12-15 16:30:18 Get transaction from database, processing code: 263010
+2020-12-15 16:30:18 Field[3]: 263010
+2020-12-15 16:30:18 Extract Element ISO8583 success (200)
+2020-12-15 16:31:33 New Request: JSON to ISO8583
+2020-12-15 16:31:33 Field[13]: 0921(Date, local transaction (MMDD))
+2020-12-15 16:31:33 Field[18]: 7011(Merchant type)
+2020-12-15 16:31:33 Field[22]: 011(Point of service entry mode)
+2020-12-15 16:31:33 Field[37]: 678615554461(Retrieval reference number)
+2020-12-15 16:31:33 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI(Additional data - private)
+2020-12-15 16:31:33 Field[4]: 000011550000(Amount, transaction)
+2020-12-15 16:31:33 Field[12]: 082022(Time, local transaction (hhmmss))
+2020-12-15 16:31:33 Field[7]: 0921072381(Transmission date & time)
+2020-12-15 16:31:33 Field[10]: 00000111(Conversion rate, cardholder billing)
+2020-12-15 16:31:33 Field[17]: 0921(Date, capture)
+2020-12-15 16:31:33 Field[57]: 61051511562070703C01(Reserved national)
+2020-12-15 16:31:33 Field[5]: 000001350000(Amount, settlement)
+2020-12-15 16:31:33 Field[6]: 000001350000(Amount, cardholder billing)
+2020-12-15 16:31:33 Field[41]: C01             (Card acceptor terminal identification)
+2020-12-15 16:31:33 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID(Card acceptor name/location)
+2020-12-15 16:31:33 Field[51]: 702(Currency code, cardholder billing)
+2020-12-15 16:31:33 Field[2]: 9360014900000008883(Primary account number (PAN))
+2020-12-15 16:31:33 Field[9]: 00000111(Conversion rate, settlement)
+2020-12-15 16:31:33 Field[49]: 360(Currency code, transaction)
+2020-12-15 16:31:33 Field[50]: 702(Currency code, settlement)
+2020-12-15 16:31:33 Field[3]: 263010(Processing code)
+2020-12-15 16:31:33 Field[11]: 554461(System trace audit number)
+2020-12-15 16:31:33 Header: 0289
+2020-12-15 16:31:33 MTI: 0200
+2020-12-15 16:31:33 HEX: 7ef8c40008a1e080
+2020-12-15 16:31:33 ISO Message: 02007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:31:33 ISO Full Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:31:33 File: 263010_2020-12-15_16.31.33.txt
+2020-12-15 16:31:33 JSON to ISO8583 success (200)
+2020-12-15 16:32:18 New Request: ISO8583 to JSON
+2020-12-15 16:32:18 ISO Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:32:18 ISO8583 to JSON success (200)
+2020-12-15 16:32:46 New Request: ISO8583 to JSON
+2020-12-15 16:32:46 ISO Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 16:32:46 ISO8583 to JSON success (200)
+2020-12-15 17:44:25 New Request: JSON to ISO8583
+2020-12-15 17:44:26 Get transaction from database, processing code: 263010
+2020-12-15 17:44:26 Field[22]: 011 (Point of service entry mode)
+2020-12-15 17:44:26 Field[51]: 702 (Currency code, cardholder billing)
+2020-12-15 17:44:26 Field[11]: 554461 (System trace audit number)
+2020-12-15 17:44:26 Field[5]: 000001350000 (Amount, settlement)
+2020-12-15 17:44:26 Field[9]: 00000111 (Conversion rate, settlement)
+2020-12-15 17:44:26 Field[17]: 0921 (Date, capture)
+2020-12-15 17:44:26 Field[18]: 7011 (Merchant type)
+2020-12-15 17:44:26 Field[37]: 678615554461 (Retrieval reference number)
+2020-12-15 17:44:26 Field[3]: 263010 (Processing code)
+2020-12-15 17:44:26 Field[6]: 000001350000 (Amount, cardholder billing)
+2020-12-15 17:44:26 Field[7]: 0921072381 (Transmission date & time)
+2020-12-15 17:44:26 Field[10]: 00000111 (Conversion rate, cardholder billing)
+2020-12-15 17:44:26 Field[12]: 082022 (Time, local transaction (hhmmss))
+2020-12-15 17:44:26 Field[57]: 61051511562070703C01 (Reserved national)
+2020-12-15 17:44:26 Field[4]: 000011550000 (Amount, transaction)
+2020-12-15 17:44:26 Field[13]: 0921 (Date, local transaction (MMDD))
+2020-12-15 17:44:26 Field[41]: C01              (Card acceptor terminal identification)
+2020-12-15 17:44:26 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID (Card acceptor name/location)
+2020-12-15 17:44:26 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI (Additional data - private)
+2020-12-15 17:44:26 Field[49]: 360 (Currency code, transaction)
+2020-12-15 17:44:26 Field[50]: 702 (Currency code, settlement)
+2020-12-15 17:44:26 Field[2]: 9360014900000008883 (Primary account number (PAN))
+2020-12-15 17:44:26 Header: 0289
+2020-12-15 17:44:26 MTI: 0200
+2020-12-15 17:44:26 HEX: 7ef8c40008a1e080
+2020-12-15 17:44:26 ISO Message: 02007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:44:26 ISO Full Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:44:26 File: 263010_2020-12-15_17.44.26.txt
+2020-12-15 17:44:26 JSON to ISO8583 success (200)
+2020-12-15 17:44:51 New Request: Extract Element ISO8583
+2020-12-15 17:44:51 Field[4]: 000011550000 (Amount, transaction)
+2020-12-15 17:44:51 Field[41]: C01              (Card acceptor terminal identification)
+2020-12-15 17:44:51 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI (Additional data - private)
+2020-12-15 17:44:51 Field[50]: 702 (Currency code, settlement)
+2020-12-15 17:44:51 Field[49]: 360 (Currency code, transaction)
+2020-12-15 17:44:51 Field[51]: 702 (Currency code, cardholder billing)
+2020-12-15 17:44:51 Field[2]: 9360014900000008883 (Primary account number (PAN))
+2020-12-15 17:44:51 Field[3]: 263010 (Processing code)
+2020-12-15 17:44:51 Field[7]: 0921072381 (Transmission date & time)
+2020-12-15 17:44:51 Field[11]: 554461 (System trace audit number)
+2020-12-15 17:44:51 Field[18]: 7011 (Merchant type)
+2020-12-15 17:44:51 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID (Card acceptor name/location)
+2020-12-15 17:44:51 Field[57]: 61051511562070703C01 (Reserved national)
+2020-12-15 17:44:51 Field[5]: 000001350000 (Amount, settlement)
+2020-12-15 17:44:51 Field[10]: 00000111 (Conversion rate, cardholder billing)
+2020-12-15 17:44:51 Field[12]: 082022 (Time, local transaction (hhmmss))
+2020-12-15 17:44:51 Field[17]: 0921 (Date, capture)
+2020-12-15 17:44:51 Field[22]: 011 (Point of service entry mode)
+2020-12-15 17:44:51 Field[6]: 000001350000 (Amount, cardholder billing)
+2020-12-15 17:44:51 Field[9]: 00000111 (Conversion rate, settlement)
+2020-12-15 17:44:51 Field[13]: 0921 (Date, local transaction (MMDD))
+2020-12-15 17:44:51 Field[37]: 678615554461 (Retrieval reference number)
+2020-12-15 17:44:51 Get transaction from database, processing code: 263010
+2020-12-15 17:44:51 Field[3]: 263010
+2020-12-15 17:44:51 Extract Element ISO8583 success (200)
+2020-12-15 17:45:17 New Request: JSON to ISO8583
+2020-12-15 17:45:17 Get transaction from database, processing code: 263010
+2020-12-15 17:45:17 Field[2]: 9360014900000008883 (Primary account number (PAN))
+2020-12-15 17:45:17 Field[6]: 000001350000 (Amount, cardholder billing)
+2020-12-15 17:45:17 Field[9]: 00000111 (Conversion rate, settlement)
+2020-12-15 17:45:17 Field[11]: 554461 (System trace audit number)
+2020-12-15 17:45:17 Field[17]: 0921 (Date, capture)
+2020-12-15 17:45:17 Field[18]: 7011 (Merchant type)
+2020-12-15 17:45:17 Field[22]: 011 (Point of service entry mode)
+2020-12-15 17:45:17 Field[41]: C01              (Card acceptor terminal identification)
+2020-12-15 17:45:17 Field[50]: 702 (Currency code, settlement)
+2020-12-15 17:45:17 Field[51]: 702 (Currency code, cardholder billing)
+2020-12-15 17:45:17 Field[57]: 61051511562070703C01 (Reserved national)
+2020-12-15 17:45:17 Field[3]: 263010 (Processing code)
+2020-12-15 17:45:17 Field[7]: 0921072381 (Transmission date & time)
+2020-12-15 17:45:17 Field[12]: 082022 (Time, local transaction (hhmmss))
+2020-12-15 17:45:17 Field[37]: 678615554461 (Retrieval reference number)
+2020-12-15 17:45:17 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI (Additional data - private)
+2020-12-15 17:45:17 Field[4]: 000011550000 (Amount, transaction)
+2020-12-15 17:45:17 Field[10]: 00000111 (Conversion rate, cardholder billing)
+2020-12-15 17:45:17 Field[5]: 000001350000 (Amount, settlement)
+2020-12-15 17:45:17 Field[13]: 0921 (Date, local transaction (MMDD))
+2020-12-15 17:45:17 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID (Card acceptor name/location)
+2020-12-15 17:45:17 Field[49]: 360 (Currency code, transaction)
+2020-12-15 17:45:17 Header: 0289
+2020-12-15 17:45:17 MTI: 0200
+2020-12-15 17:45:17 HEX: 7ef8c40008a1e080
+2020-12-15 17:45:17 ISO Message: 02007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:45:17 ISO Full Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:45:17 File: 263010_2020-12-15_17.45.17.txt
+2020-12-15 17:45:17 JSON to ISO8583 success (200)
+2020-12-15 17:45:34 New Request: ISO8583 to JSON from file
+2020-12-15 17:45:34 ISO Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:45:34 ISO8583 to JSON success (200)
+2020-12-15 17:46:02 New Request: JSON to ISO8583
+2020-12-15 17:46:02 Field[4]: 000011550000 (Amount, transaction)
+2020-12-15 17:46:02 Field[6]: 000001350000 (Amount, cardholder billing)
+2020-12-15 17:46:02 Field[41]: C01              (Card acceptor terminal identification)
+2020-12-15 17:46:02 Field[49]: 360 (Currency code, transaction)
+2020-12-15 17:46:02 Field[11]: 554461 (System trace audit number)
+2020-12-15 17:46:02 Field[22]: 011 (Point of service entry mode)
+2020-12-15 17:46:02 Field[43]: IUT MLPT      RINTIS     TANGERANG    ID (Card acceptor name/location)
+2020-12-15 17:46:02 Field[51]: 702 (Currency code, cardholder billing)
+2020-12-15 17:46:02 Field[3]: 263010 (Processing code)
+2020-12-15 17:46:02 Field[5]: 000001350000 (Amount, settlement)
+2020-12-15 17:46:02 Field[7]: 0921072381 (Transmission date & time)
+2020-12-15 17:46:02 Field[9]: 00000111 (Conversion rate, settlement)
+2020-12-15 17:46:02 Field[18]: 7011 (Merchant type)
+2020-12-15 17:46:02 Field[37]: 678615554461 (Retrieval reference number)
+2020-12-15 17:46:02 Field[48]: PI04Q001CD30SUSAEN                         MC03UMI (Additional data - private)
+2020-12-15 17:46:02 Field[50]: 702 (Currency code, settlement)
+2020-12-15 17:46:02 Field[2]: 9360014900000008883 (Primary account number (PAN))
+2020-12-15 17:46:02 Field[10]: 00000111 (Conversion rate, cardholder billing)
+2020-12-15 17:46:02 Field[12]: 082022 (Time, local transaction (hhmmss))
+2020-12-15 17:46:02 Field[17]: 0921 (Date, capture)
+2020-12-15 17:46:02 Field[13]: 0921 (Date, local transaction (MMDD))
+2020-12-15 17:46:02 Field[57]: 61051511562070703C01 (Reserved national)
+2020-12-15 17:46:02 Header: 0289
+2020-12-15 17:46:02 MTI: 0200
+2020-12-15 17:46:02 HEX: 7ef8c40008a1e080
+2020-12-15 17:46:02 ISO Message: 02007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:46:02 ISO Full Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:46:02 File: 263010_2020-12-15_17.46.02.txt
+2020-12-15 17:46:02 JSON to ISO8583 success (200)
+2020-12-15 17:47:44 New Request: ISO8583 to JSON
+2020-12-15 17:47:44 ISO Message: 028902007ef8c40008a1e08019936001490000000888326301000001155000000000135000000000135000009210723810000011100000111554461082022092109217011011678615554461C01             IUT MLPT      RINTIS     TANGERANG    ID050PI04Q001CD30SUSAEN                         MC03UMI36070270202061051511562070703C01
+2020-12-15 17:47:44 ISO8583 to JSON success (200)
